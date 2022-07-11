@@ -10,14 +10,18 @@ import s from './App.module.css';
 
 const App = () => {
   const [food, setFood] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [cart, setCart] = useState(
+    localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : []
+  );
 
+  const [totalPrice, setTotalPrice] = useState(0);
+  
   useEffect(() => {
     setTotalPrice(
-      cart.reduce((prev, curr) => prev + Number(curr.price)*curr.count, 0)
-    )
-  }, [cart]);
+      cart.reduce((prev, curr) => prev + Number(curr.price) * curr.count, 0)
+    );
+    localStorage.setItem('cart', JSON.stringify(cart));
+    }, [cart]);
 
   useEffect(() => {
     const fetchProductsList = async () => {
@@ -25,7 +29,7 @@ const App = () => {
         const trendingFilms = await fetchProducts();
         setFood(trendingFilms);
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
       }
     };
@@ -123,6 +127,7 @@ const App = () => {
         />
         <Route path="*" element={<Navigate to="/shop" />} />
       </Routes>
+      
     </div>
   );
 };

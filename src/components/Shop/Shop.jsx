@@ -2,8 +2,6 @@ import { NavLink, Outlet } from 'react-router-dom';
 import s from './Shop.module.css';
 
 const Shop = () => {
-
-    
     return (
         <div className={s.container}>
         <div className={s.box}>
