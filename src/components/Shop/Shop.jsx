@@ -1,23 +1,8 @@
-import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import fetchProducts from 'services/api';
+import { NavLink, Outlet } from 'react-router-dom';
 import s from './Shop.module.css';
 
 const Shop = () => {
-    const [food, setFood] = useState([]);
 
-  useEffect(() => {
-    const fetchProductsList = async () => {
-      try {
-        const trendingFilms = await fetchProducts();
-        setFood(trendingFilms);
-      } catch (error) {
-        console.log(error);
-      } finally {
-      }
-    };
-    fetchProductsList();
-  }, []);
     
     return (
         <div className={s.container}>
@@ -31,21 +16,13 @@ const Shop = () => {
     <NavLink to="eater" className={({ isActive }) => (isActive ? s.active : s.link)}>Eater</NavLink>
 </li>
                     <li>
-    <NavLink to="coocer" className={({ isActive }) => (isActive ? s.active : s.link)}>Cooker</NavLink>
+    <NavLink to="cooker" className={({ isActive }) => (isActive ? s.active : s.link)}>Cooker</NavLink>
 </li>
                 </ul>
         </div>
         <div className={s.box}>
                 <ul className={s.products__list}>
-                    {food && food.map(f => (
-                        <li className={s.products__card} key={f.id}>
-             <img className={s.products__img} src={f.image} alt={f.title} />
-                        <div className={s.about_product}><div>
-                                <h3 className={s.products__name}>{f.title}</h3>
-                        <p className={s.products__price}>$ {f.price} USD</p></div>
-              <button type='button' className={s.button}>Add to Cart</button></div>          
-                    </li>
-))}
+                    <Outlet/>
                 </ul>      
             </div>
             </div>
