@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, NavLink, Navigate } from 'react-router-dom';
-import {fetchProducts} from 'services/api';
+import { ToastContainer, toast } from 'react-toastify';
+import { fetchProducts } from 'services/api';
 import Shop from '../Shop/Shop';
 import ShoppingCart from '../ShoppingCart/ShoppingCart';
 import Fooder from 'components/Shop/Fooder/Fooder';
 import Eater from 'components/Shop/Eater/Eater';
 import Cooker from 'components/Shop/Cooker/Cooker';
+import 'react-toastify/dist/ReactToastify.css';
 import s from './App.module.css';
 
 const App = () => {
@@ -15,13 +17,13 @@ const App = () => {
   );
 
   const [totalPrice, setTotalPrice] = useState(0);
-  
+
   useEffect(() => {
     setTotalPrice(
       cart.reduce((prev, curr) => prev + Number(curr.price) * curr.count, 0)
     );
     localStorage.setItem('cart', JSON.stringify(cart));
-    }, [cart]);
+  }, [cart]);
 
   useEffect(() => {
     const fetchProductsList = async () => {
@@ -29,7 +31,7 @@ const App = () => {
         const trendingFilms = await fetchProducts();
         setFood(trendingFilms);
       } catch (error) {
-        alert(error);
+        toast.error(error);
       } finally {
       }
     };
@@ -38,51 +40,57 @@ const App = () => {
 
   const addToCart = item => {
     const isItem = cart.find(c => c.id === item.id);
-        if (isItem) {
-          increment(item.id);
-          alert(`Item added`); 
-          return;
-      } 
-        setCart([
-          {
-            id: item.id,
-            title: item.title,
-            image: item.image,
-            price: item.price,
-            count: 1,
-          },
-          ...cart,
-        ]);
-    alert(`Item added`); 
+    if (isItem) {
+      increment(item.id);
+      toast.success(`Item added`);
+      return;
+    }
+    setCart([
+      {
+        id: item.id,
+        title: item.title,
+        image: item.image,
+        price: item.price,
+        count: 1,
+      },
+      ...cart,
+    ]);
+    toast.success(`Item added`);
   };
 
   const deleteProduct = id => {
     setCart(cart => cart.filter(c => c.id !== id));
-    alert(`Item deleted`);
+    toast.info(`Item deleted`);
   };
 
   const increment = id => {
-    setCart(cart => cart.map(c => {
-      if (c.id === id) {
-        return {
-          ...c,
-          count: c.count + 1,
-        };
-      } return c;
-    }))
+    setCart(cart =>
+      cart.map(c => {
+        if (c.id === id) {
+          return {
+            ...c,
+            count: c.count + 1,
+          };
+        }
+        return c;
+      })
+    );
   };
   const decrement = id => {
-    setCart(cart => cart.map(c => {
-      if (c.id === id) {
-        if (c.count <= 1) {
-          deleteProduct(id);
+    setCart(cart =>
+      cart.map(c => {
+        if (c.id === id) {
+          if (c.count <= 1) {
+            deleteProduct(id);
+          }
+          return {
+            ...c,
+            count: c.count - 1,
+          };
         }
-        return {
-          ...c,
-          count: c.count - 1,
-        };
-      } return c;
-   }))
+        return c;
+      })
+    );
   };
 
   return (
@@ -121,13 +129,20 @@ const App = () => {
         </Route>
         <Route
           path="/shopping-cart"
-          element={<ShoppingCart cart={cart} deleteProduct={deleteProduct}
-            increment={increment} decrement={decrement} totalPrice={totalPrice}
-            setCart={setCart} />}
+          element={
+            <ShoppingCart
+              cart={cart}
+              deleteProduct={deleteProduct}
+              increment={increment}
+              decrement={decrement}
+              totalPrice={totalPrice}
+              setCart={setCart}
+            />
+          }
         />
         <Route path="*" element={<Navigate to="/shop" />} />
       </Routes>
-      
+      <ToastContainer position="top-center" autoClose={3000} theme="colored" />
     </div>
   );
 };

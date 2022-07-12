@@ -9,6 +9,10 @@ export const fetchProducts = async () => {
 
 export const fetchOrder = async ({ name, email, phone, address, cart }) => {
   await axios.post(`order`, {
-     name, email, phone, address, cart 
+    name,
+    email,
+    phone,
+    address,
+    cart,
   });
-}
+};
