@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, NavLink, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import { fetchProducts } from 'services/api';
 import Shop from '../Shop/Shop';
 import ShoppingCart from '../ShoppingCart/ShoppingCart';
 import Fooder from 'components/Shop/Fooder/Fooder';
 import Eater from 'components/Shop/Eater/Eater';
 import Cooker from 'components/Shop/Cooker/Cooker';
+import { cookerFoodList } from '../../data/cooker';
+import { eaterFoodList } from '../../data/eater';
+import { fooderFoodList } from '../../data/fooder';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './App.module.css';
 
 const App = () => {
-  const [food, setFood] = useState([]);
+  const [foodFooder, setFoodFooder] = useState([]);
+  const [foodCooker, setFoodCooker] = useState([]);
+  const [foodEater, setFoodEater] = useState([]);
+  
   const [cart, setCart] = useState(
     localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : []
   );
@@ -26,15 +31,11 @@ const App = () => {
   }, [cart]);
 
   useEffect(() => {
-    const fetchProductsList = async () => {
-      try {
-        const trendingFilms = await fetchProducts();
-        setFood(trendingFilms);
-      } catch (error) {
-        toast.error(error);
-      } finally {
-      }
-    };
+    const fetchProductsList = () => {
+      setFoodFooder(fooderFoodList);
+      setFoodCooker(cookerFoodList);
+      setFoodEater(eaterFoodList);
+      };
     fetchProductsList();
   }, []);
 
@@ -116,15 +117,15 @@ const App = () => {
         <Route path="/shop" element={<Shop />}>
           <Route
             path="fooder"
-            element={<Fooder food={food} onAdd={addToCart} />}
+            element={<Fooder food={foodFooder} onAdd={addToCart} />}
           />
           <Route
             path="eater"
-            element={<Eater food={food} onAdd={addToCart} />}
+            element={<Eater food={foodEater} onAdd={addToCart} />}
           />
           <Route
             path="cooker"
-            element={<Cooker food={food} onAdd={addToCart} />}
+            element={<Cooker food={foodCooker} onAdd={addToCart} />}
           />
         </Route>
         <Route

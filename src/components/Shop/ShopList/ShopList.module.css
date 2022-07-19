@@ -2,11 +2,17 @@
   background-color: #f9f8f8;
   border: none;
   border-radius: 10px;
+  max-width: 400px;
+  max-height: 350px;
+  padding-bottom: 80px;
 }
 .products__img {
   margin: 0 auto;
-  width: 400px;
-  padding: 12px;
+  height: 90%;
+    width: 90%;
+    object-fit: cover;  
+    border-radius: 20px;
+
 }
 .about_product {
   display: flex;
@@ -14,7 +20,7 @@
 }
 
 .products__name {
-  margin-top: 18px;
+  margin-top: 4px;
   margin-bottom: 12px;
   padding-left: 24px;
   font-style: normal;
@@ -34,7 +40,8 @@
 
 .button {
   margin: auto 24px;
-  padding: 12px;
+  max-width: 400px;
+  padding: 8px;
   height: 36px;
   border-radius: 10px;
 }
